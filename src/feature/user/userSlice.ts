@@ -3,6 +3,7 @@ import { FormValues } from './RegisterForm'
 import _ from 'lodash'
 import jwtDecode from 'jwt-decode'
 import http from '../../app/service/httpService'
+import { toast } from 'react-toastify'
 
 const apiUrl = 'http://localhost:3900/api'
 const tokenKey = 'token'
@@ -79,20 +80,26 @@ export const userSlice = createSlice({
         state.token = payload.token
         state.currentUser.name = payload.name
         state.currentUser.email = payload.email
+
+        toast('registed a account successful')
+
         localStorage.setItem(tokenKey, payload.token)
         window.location.href = '/'
       })
       .addCase(registerUser.rejected, (state, { payload }) => {
-        console.log('rejected', payload)
+        toast.error(payload as string)
       })
 
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         state.token = payload.token
         localStorage.setItem(tokenKey, payload.token)
+
+        toast('login successful')
+
         window.location.href = '/'
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
-        console.log('rejected', payload)
+        toast.error(payload as string)
       })
   },
 })
