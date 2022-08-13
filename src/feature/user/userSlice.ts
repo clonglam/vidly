@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { FormValues } from './RegisterForm'
-import _ from 'lodash'
+import { createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit'
 import jwtDecode from 'jwt-decode'
-import http from '../../app/service/httpService'
 import { toast } from 'react-toastify'
+import _ from 'lodash'
+import { FormValues } from './RegisterForm'
+import http from '../../app/service/httpService'
 
 const apiUrl = 'http://localhost:3900/api'
 const tokenKey = 'token'
@@ -28,7 +28,7 @@ export const registerUser = createAsyncThunk<
 })
 
 export const loginUser = createAsyncThunk<
-  { email: string; name: string; token: string },
+  string,
   { email: string; password: string },
   { state: { user: UserState } }
 >('user/loginStatus', async ({ email, password }, thunkAPI) => {
@@ -49,13 +49,13 @@ export type UserType = {
 }
 
 export interface UserState {
-  currentUser: UserType | null
+  currentUser: UserType
   token: string | null
 }
 
 // Define the initial state using that type
 const initialState = {
-  currentUser: null,
+  currentUser: { name: '', email: '' },
   token: null,
 }
 
@@ -71,18 +71,28 @@ export const userSlice = createSlice({
     getJwt(state: UserState) {
       state.token = localStorage.getItem(tokenKey)
     },
+    getCurrentUser(state: UserState) {
+      console.log('getcurrent User')
+      try {
+        const jwt = localStorage.getItem(tokenKey)
+        const user = jwtDecode<UserType>(jwt)
+
+        state.currentUser.email = user.email
+        state.currentUser.name = user.name
+        console.log(state.currentUser)
+      } catch (ex) {
+        state.currentUser = { name: '', email: '' }
+      }
+    },
   },
 
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder
       .addCase(registerUser.fulfilled, (state, { payload }) => {
-        state.token = payload.token
-        state.currentUser.name = payload.name
-        state.currentUser.email = payload.email
+        state.token = payload
 
         toast('registed a account successful')
-
         localStorage.setItem(tokenKey, payload.token)
         window.location.href = '/'
       })
@@ -91,11 +101,9 @@ export const userSlice = createSlice({
       })
 
       .addCase(loginUser.fulfilled, (state, { payload }) => {
-        state.token = payload.token
-        localStorage.setItem(tokenKey, payload.token)
-
+        state.token = payload
+        localStorage.setItem(tokenKey, payload)
         toast('login successful')
-
         window.location.href = '/'
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
@@ -104,6 +112,11 @@ export const userSlice = createSlice({
   },
 })
 
-export const { logout } = userSlice.actions
+export const { logout, getCurrentUser } = userSlice.actions
+
+export async function login(email, password) {
+  const { data: jwt } = await http.post('http://localhost:3900/api/auth', { email, password })
+  localStorage.setItem(tokenKey, jwt)
+}
 
 export default userSlice.reducer

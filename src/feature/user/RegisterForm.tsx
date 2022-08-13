@@ -71,7 +71,7 @@ const RegisterForm = () => {
           <p className='text-zinc-500 font-[400] text-sm'>
             already have account?{' '}
             <Link className='text-white font-[600]' to='/login'>
-              Login innow.
+              Login in now.
             </Link>
           </p>
         </div>
