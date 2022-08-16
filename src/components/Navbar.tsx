@@ -15,7 +15,7 @@ const Navbar = ({ user }: Props) => {
     { name: 'Login', path: '/login' },
   ]
   return (
-    <div className={clsx('px-5 w-full py-2 absolute')}>
+    <div className={clsx('px-5 w-full py-2 -mb-20')}>
       <div className='flex container mx-auto justify-between space-x-3 items-center'>
         <Link className='font-bold text-red-700 text-5xl' to='/'>
           Vidly

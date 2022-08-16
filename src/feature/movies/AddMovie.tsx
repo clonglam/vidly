@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { fetchGenres, selectGenres } from '../genres/genresSlice'
 import { addMovie } from './moviesSlice'
@@ -9,11 +9,15 @@ type Inputs = {
   genreId: string
   numberInStock: number
   dailyRentalRate: number
+  about: string
+  pv: string
+  coverImage: File
 }
 
 const AddMovie = () => {
   const dispatch = useAppDispatch()
   const { genreList } = useAppSelector((state) => state.genres)
+  const [file, setFile] = useState<File>()
 
   useEffect(() => {
     dispatch(fetchGenres(''))
@@ -25,15 +29,20 @@ const AddMovie = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>()
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data)
     dispatch(addMovie(data))
+  }
+
+  const fileSelected = (event) => {
+    const file = event.target.files[0]
+    setFile(file)
   }
 
   //   console.log(watch('title')) // watch input value by passing the name of it
 
   return (
-    <div className='container '>
+    <div className='container pt-20 '>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className='w-1/2 mx-auto flex flex-col items-start space-y-2'
@@ -58,7 +67,6 @@ const AddMovie = () => {
             </option>
           ))}
         </select>
-
         {/* Number In Stock */}
         <label className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
           Number In Stock
@@ -71,7 +79,6 @@ const AddMovie = () => {
         {errors.numberInStock && (
           <span className='mt-2  text-pink-600 text-sm'>This field is required</span>
         )}
-
         {/* Number In Stock */}
         <label className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
           Daily Rental Rate
@@ -84,7 +91,9 @@ const AddMovie = () => {
         {errors.numberInStock && (
           <span className='mt-2  text-pink-600 text-sm'>This field is required</span>
         )}
-
+        <input type='file' accept='image/*' {...register('coverImage', { required: true })} />{' '}
+        {/* <p> onchange</p>
+        <input onChange={fileSelected} type='file' accept='image/*'></input> */}
         <input type='submit' />
       </form>
     </div>

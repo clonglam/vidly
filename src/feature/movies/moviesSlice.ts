@@ -5,9 +5,10 @@ import { createAsyncThunk, createSlice, PayloadAction, SerializedError } from '@
 import type { RootState } from '../../app/store'
 import axios, { AxiosError } from 'axios'
 import moment from 'moment'
+import _ from 'lodash'
 
 export const fetchMovies = createAsyncThunk<
-  MovieSchema[],
+  MovieType[],
   string,
   { state: { movies: MoviesState } }
 >('movies/fetchMoviesStatus', async (_, thunkAPI) => {
@@ -27,29 +28,40 @@ export const fetchMovies = createAsyncThunk<
 
 export const addMovie = createAsyncThunk<
   MovieType,
-  { title: string; numberInStock: number; dailyRentalRate: number; genreId: string },
+  {
+    title: string
+    numberInStock: number
+    dailyRentalRate: number
+    genreId: string
+    coverImage: File
+  },
   { state: { movies: MoviesState } }
->('movies/addMovieStatus', async ({ title, numberInStock, dailyRentalRate, genreId }, thunkAPI) => {
-  const newMovie = {
-    title,
-    numberInStock,
-    dailyRentalRate,
-    genreId,
-  }
-  try {
-    const res = await axios({
-      method: 'post',
-      url: 'http://localhost:3900/api/movies',
-      headers: { 'Content-Type': 'application/json' },
-      data: newMovie,
-    })
-    // console.log(res.data)
-    return res.data
-  } catch (err) {
-    if (err.response.data) return thunkAPI.rejectWithValue(err.response.data)
-    return thunkAPI.rejectWithValue(err.message)
-  }
-})
+>(
+  'movies/addMovieStatus',
+  async ({ title, numberInStock, dailyRentalRate, genreId, coverImage }, thunkAPI) => {
+    const formData = new FormData()
+    formData.append('title', title)
+    formData.append('numberInStock', numberInStock as unknown as string)
+    formData.append('dailyRentalRate', dailyRentalRate as unknown as string)
+    formData.append('genreId', genreId)
+    formData.append('coverImage', coverImage[0])
+
+    console.log(formData)
+    try {
+      const res = await axios({
+        method: 'post',
+        url: 'http://localhost:3900/api/movies',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: formData,
+      })
+      // console.log(res.data)
+      return res.data
+    } catch (err) {
+      if (err.response.data) return thunkAPI.rejectWithValue(err.response.data)
+      return thunkAPI.rejectWithValue(err.message)
+    }
+  },
+)
 
 export type MovieType = {
   _id: string
@@ -57,13 +69,14 @@ export type MovieType = {
   numberInStock: number
   dailyRentalRate: number
   genre: GenreType
+  coverImg: string
 }
 
 export interface MoviesState {
   movies: MovieType[]
   error: string | null | SerializedError
-  status: 'idle' | 'loading' | 'succeeded' | 'failed'
   lastFetch: number
+  status: 'idle' | 'loading' | 'succeeded' | 'failed'
 }
 
 // Define the initial state using that type

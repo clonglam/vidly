@@ -6,7 +6,7 @@ import { fetchGenres } from '../genres/genresSlice'
 
 const MovieList = () => {
   const dispatch = useAppDispatch()
-  const { movies } = useAppSelector((state) => state.movies)
+  const { movies, status: MoiveStatus } = useAppSelector((state) => state.movies)
   // console.log('movie: ', movies)
   const genres = useAppSelector((state) => state.genres.genreList)
   useEffect(() => {
@@ -16,9 +16,16 @@ const MovieList = () => {
 
   // dispatch(apiCallBegan({ url: 'movies', onSuccess: 'movies/movieReceived' }))
   return (
-    <div className='pt-[72px]'>
-      {movies.length > 0 ? <MovieTable movies={movies} /> : 'There is no movie in the database'}
-    </div>
+    <>
+      {MoiveStatus === 'succeeded' ? (
+        <div className='pt-[72px]'>
+          <img src={`${movies[0].coverImg}`} />
+          {movies.length > 0 ? <MovieTable movies={movies} /> : 'There is no movie in the database'}
+        </div>
+      ) : (
+        <p>loading</p>
+      )}
+    </>
   )
 }
 

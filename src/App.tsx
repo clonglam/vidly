@@ -9,6 +9,7 @@ import Navbar from './components/Navbar'
 import { getCurrentUser } from './feature/user/userSlice'
 import { useAppSelector, useAppDispatch } from './app/hooks'
 import './styles/App.css'
+import MoviePage from './feature/movies/MoviePage'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -28,6 +29,7 @@ function App() {
           <Route path='/addmovie' element={<AddMovie />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<RegisterForm />} />
+          <Route path='/movie/:id' element={<MoviePage />} />
         </Routes>
       </div>
     </>
