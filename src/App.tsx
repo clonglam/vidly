@@ -10,6 +10,7 @@ import { getCurrentUser } from './feature/user/userSlice'
 import { useAppSelector, useAppDispatch } from './app/hooks'
 import './styles/App.css'
 import MoviePage from './feature/movies/MoviePage'
+import MovieLanding from './feature/movies/MovieLanding'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -23,9 +24,9 @@ function App() {
     <>
       <Header />
       <Navbar user={user.currentUser} />
-      <div className='App'>
+      <div className='App z-0'>
         <Routes>
-          <Route path='/' element={<MovieList />} />
+          <Route path='/' element={<MovieLanding />} />
           <Route path='/addmovie' element={<AddMovie />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<RegisterForm />} />

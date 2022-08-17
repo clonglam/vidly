@@ -10,11 +10,11 @@ const MoviePage = () => {
 
   return (
     <>
-      <div className='pt-24 flex flex-col gap-y-10'>
+      <div className='z-0 flex flex-col gap-y-10 bg-zinc-900'>
         <div className='relative'>
           <img
+            className='w-full brightness-75 object-center object-cover h-[600px]'
             src='https://hbomax-images.warnermediacdn.com/images/GYdYmPQZFO7eZGAEAAAAT/tile.jpeg?size=1280x720&format=jpeg&partner=hbocom&v=d8f493641653b85904f84954b1e9d5d8&productCode=hbomax&host=artist.api.cdn.hbo.com&w=1200'
-            className='object-cover w-full brightness-75'
           />
           <div className='absolute bottom-10  text-left container mx-auto ml-3 md:ml-20 '>
             <p className=' text-3xl md:text-5xl font-bold text-white mb-3 w-45'>Free Guy</p>
@@ -43,8 +43,8 @@ const MoviePage = () => {
             </p>
           </div>
 
-          <div className='flex flex-col justify-center text-center py-10 bg-red-800 my-10'>
-            <h2 className='font-bold text-slate-100 text-3xl'>It is now alvaiable on Vidly</h2>
+          <div className='flex flex-col justify-center text-center py-10 bg-red-800 my-10 shadow-sm hover:shadow-lg hover:scale-105 duration-200  transition-all'>
+            <h2 className='font-bold text-slate-100 text-3xl'>It is now alvaiable on Vidly </h2>
             <p className='font-normal text-slate-100 text-lg'>
               Rent this movie This weekend come and enjoy the movie with your family
             </p>
@@ -67,7 +67,7 @@ const MoviePage = () => {
             <h3 className='text-4xl font-semibold text-slate-900 shadow-sm text-left mb-5'>
               Watch It now
             </h3>
-            <div className='px-5 py-3 bg-red-800 flex items-center space-x-3 text-white rounded-xl w-[180px] cursor-pointer'>
+            <div className='hover:shadow-lg hover:scale-105 duration-200  transition-all px-5 py-3 shadow-md bg-red-800 flex items-center space-x-3 text-white rounded-xl w-[180px] cursor-pointer'>
               <BiCameraMovie className='text-3xl' />
               <div className='flex flex-start flex-col'>
                 <p className='w-20ch font-semibold text-sm'>Available on</p>
