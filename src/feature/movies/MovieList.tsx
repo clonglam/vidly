@@ -19,7 +19,7 @@ const MovieList = () => {
     <>
       {MoiveStatus === 'succeeded' ? (
         <div className='pt-[72px]'>
-          <img src={`${movies[0].coverImg}`} />
+          {/* <img src={`${movies[0].coverImg}`} /> */}
           {movies.length > 0 ? <MovieTable movies={movies} /> : 'There is no movie in the database'}
         </div>
       ) : (

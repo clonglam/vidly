@@ -7,7 +7,9 @@ interface Props {
 
 const UserControl = ({ user }: Props) => {
   return (
-    <div> {user.name !== '' ? <p>{`hello ${user.name}`}</p> : <p>There is no user logined</p>}</div>
+    <div className=' text-white glow'>
+      {user.name !== '' ? <p>{`hello ${user.name}`}</p> : <p>There is no user logined</p>}
+    </div>
   )
 }
 

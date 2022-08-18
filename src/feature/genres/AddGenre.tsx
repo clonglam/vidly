@@ -7,7 +7,7 @@ const AddGenre = ({ showAddGenre }: Props) => {
   const [genreName, setGenreName] = useState<string>('')
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('submited data:', genreName)
+    // console.log('submited data:', genreName)
     setGenreName('')
   }
 

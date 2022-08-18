@@ -10,15 +10,18 @@ import { store } from '../src/app/store'
 
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { SkeletonTheme } from 'react-loading-skeleton'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <Provider store={store}>
-    <ToastContainer />
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <SkeletonTheme baseColor='#313131' highlightColor='#525252'>
+      <ToastContainer />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </SkeletonTheme>
   </Provider>,
 )
 

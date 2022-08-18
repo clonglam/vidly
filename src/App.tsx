@@ -24,7 +24,7 @@ function App() {
     <>
       <Header />
       <Navbar user={user.currentUser} />
-      <div className='App z-0'>
+      <div className='App'>
         <Routes>
           <Route path='/' element={<MovieLanding />} />
           <Route path='/addmovie' element={<AddMovie />} />

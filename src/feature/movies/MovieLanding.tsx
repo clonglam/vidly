@@ -1,8 +1,13 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
+import clsx from 'clsx'
 import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md'
-const MovieLanding = () => {
-  const scrollRef = useRef(null)
+import Hero from '../../components/Hero'
+import MovieRow from './MovieRow'
+import requests from './request'
 
+const MovieLanding = () => {
+  const [selectedMovie, setSelectedMovie] = useState<string>('0')
+  const scrollRef = useRef(null)
   const scrollMovie = (scrollOffset: number) => {
     scrollRef.current.scrollBy({
       left: scrollOffset,
@@ -12,47 +17,64 @@ const MovieLanding = () => {
 
   return (
     <>
-      <div className='bg-black min-h-screen'>
-        {/* Hero */}
-        <div className=' relative'>
-          <img
-            className=' w-full brightness-75 object-center object-cover h-[600px] translate-all duration-200 hover:brightness-50 '
-            src='https://hbomax-images.warnermediacdn.com/images/GYdYmPQZFO7eZGAEAAAAT/tile.jpeg?size=1280x720&format=jpeg&partner=hbocom&v=d8f493641653b85904f84954b1e9d5d8&productCode=hbomax&host=artist.api.cdn.hbo.com&w=1200'
-          />
-          <div className='absolute bottom-10 text-left container mx-auto ml-3 md:ml-20 translate-all duration-200 hover:bottom-20'>
-            <p className=' text-3xl md:text-5xl font-bold text-white mb-3 w-45'>Free Guy</p>
-            <p className=' hidden md:block text-lg font-[400]  text-slate-200 w-3/4 shadow-sm'>
-              {`In "Free Guy," a bank teller who discovers he is actually a background player in an
-            open-world video game, decides to become the hero of his own story... one he rewrites
-            himself. Now in a world where there are no limits, he is determined to be the guy who
-            saves his world his way... before it is too late.`}
-            </p>
-          </div>
-        </div>
+      <div className='bg-black'>
+        <Hero />
 
-        {/* Feature Movie */}
-        <div className='h-[600px] w-full py-8 '>
+        <MovieRow
+          title='Netflix Orignal'
+          fetchUrl={`${process.env.REACT_APP_MOVIE_API_BASE_URL}${requests.fetchNetflixOrignals}`}
+          isLargeRow={true}
+        />
+
+        <MovieRow
+          title='Trending Now'
+          fetchUrl={`${process.env.REACT_APP_MOVIE_API_BASE_URL}${requests.fetchTrending}`}
+        />
+
+        <MovieRow
+          title='Top Rated'
+          fetchUrl={`${process.env.REACT_APP_MOVIE_API_BASE_URL}${requests.fetchTopRated}`}
+        />
+        <MovieRow
+          title='Action Movies'
+          fetchUrl={`${process.env.REACT_APP_MOVIE_API_BASE_URL}${requests.fetchActionMovies}`}
+        />
+        <MovieRow
+          title='Comedy Movies'
+          fetchUrl={`${process.env.REACT_APP_MOVIE_API_BASE_URL}${requests.fetchComedyMovies}`}
+        />
+        <MovieRow
+          title='Documentaries'
+          fetchUrl={`${process.env.REACT_APP_MOVIE_API_BASE_URL}${requests.fetchDocumentaries}`}
+        />
+        {/* Feature Movie
+        <div className='h-[600px] w-full py-8 relative'>
           <h3 className='text-4xl text-white font-bold text-left ml-4 mb-3'>Featured Movie</h3>
-          <div className='flex gap-5 overflow-x-scroll hideScrollBar' ref={scrollRef}>
-            <div className='absolute flex justify-between items-center w-full h-[250px] px-5'>
-              <MdArrowBackIosNew
-                className='text-white text-5xl shadow-xl hover:scale-105 transition-all duration-200'
-                onClick={() => scrollMovie(-200)}
-              />
-              <MdArrowForwardIos
-                className='text-white text-5xl shadow-xl hover:scale-105 transition-all duration-200'
-                onClick={() => scrollMovie(200)}
-              />
-            </div>
+          <div
+            className='flex gap-5 overflow-x-scroll hideScrollBar transition-all duration-200'
+            ref={scrollRef}
+          >
+            <MdArrowBackIosNew
+              className='text-white text-3xl md:text-5xl shadow-xl hover:scale-105 absolute left-10 translate-y-24 md:translate-y-20'
+              onClick={() => scrollMovie(-200)}
+            />
+            <MdArrowForwardIos
+              className='text-white text-3xl md:text-5xl shadow-xl hover:scale-105  absolute right-10 translate-y-24 md:translate-y-20'
+              onClick={() => scrollMovie(200)}
+            />
+
             <img
+              onClick={() => setSelectedMovie('1')}
+              className='object-center object-cover h-[250px] aspect-video cursor-pointer'
+              src='https://hbomax-images.warnermediacdn.com/images/GYdYmPQZFO7eZGAEAAAAT/tile.jpeg?size=1280x720&format=jpeg&partner=hbocom&v=d8f493641653b85904f84954b1e9d5d8&productCode=hbomax&host=artist.api.cdn.hbo.com&w=1200'
+            />
+            <img
+              onClick={() => setSelectedMovie('2')}
               className='object-center object-cover h-[250px] aspect-video'
               src='https://hbomax-images.warnermediacdn.com/images/GYdYmPQZFO7eZGAEAAAAT/tile.jpeg?size=1280x720&format=jpeg&partner=hbocom&v=d8f493641653b85904f84954b1e9d5d8&productCode=hbomax&host=artist.api.cdn.hbo.com&w=1200'
             />
             <img
-              className='object-center object-cover h-[250px] aspect-video'
-              src='https://hbomax-images.warnermediacdn.com/images/GYdYmPQZFO7eZGAEAAAAT/tile.jpeg?size=1280x720&format=jpeg&partner=hbocom&v=d8f493641653b85904f84954b1e9d5d8&productCode=hbomax&host=artist.api.cdn.hbo.com&w=1200'
-            />
-            <img
+              onClick={() => setSelectedMovie('3')}
               className='object-center object-cover h-[250px] aspect-video'
               src='https://hbomax-images.warnermediacdn.com/images/GYdYmPQZFO7eZGAEAAAAT/tile.jpeg?size=1280x720&format=jpeg&partner=hbocom&v=d8f493641653b85904f84954b1e9d5d8&productCode=hbomax&host=artist.api.cdn.hbo.com&w=1200'
             />
@@ -69,7 +91,13 @@ const MovieLanding = () => {
               src='https://hbomax-images.warnermediacdn.com/images/GYdYmPQZFO7eZGAEAAAAT/tile.jpeg?size=1280x720&format=jpeg&partner=hbocom&v=d8f493641653b85904f84954b1e9d5d8&productCode=hbomax&host=artist.api.cdn.hbo.com&w=1200'
             />
           </div>
-        </div>
+          <div
+            className={clsx(
+              'bg-gray-800  transition-all duration-150 px-5',
+              selectedMovie != '0' ? 'h-[600px]' : 'h-[0px]',
+            )}
+          ></div>
+        </div> */}
       </div>
     </>
   )

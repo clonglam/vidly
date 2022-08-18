@@ -30,7 +30,7 @@ const MovieTable = ({ movies }: Props) => {
   ]
   return (
     <table className='table-auto w-full px-5'>
-      <thead>
+      {/* <thead>
         <tr className='text-lg'>
           {tableHead.map(({ title }) => (
             <th key={`table_header_${title}`}>{title}</th>
@@ -46,7 +46,7 @@ const MovieTable = ({ movies }: Props) => {
             <td>{genre.name}</td>
           </tr>
         ))}
-      </tbody>
+      </tbody> */}
     </table>
   )
 }

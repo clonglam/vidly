@@ -64,7 +64,7 @@ export const genresSlice = createSlice({
     builder
       .addCase(fetchGenres.fulfilled, (state, { payload }) => {
         // Add user to the state array
-        console.log(payload)
+        // console.log(payload)
         state.genreList = payload
         state.lastFetch = Date.now()
         state.status = 'succeeded'

@@ -5,7 +5,10 @@ import { createAsyncThunk, createSlice, PayloadAction, SerializedError } from '@
 import type { RootState } from '../../app/store'
 import axios, { AxiosError } from 'axios'
 import moment from 'moment'
+import requests from './request'
 import _ from 'lodash'
+
+const MDB_BASE_PATH = 'https://api.themoviedb.org/3/'
 
 export const fetchMovies = createAsyncThunk<
   MovieType[],
@@ -18,7 +21,10 @@ export const fetchMovies = createAsyncThunk<
   if (diffInMinutes < 10) return movies
 
   try {
-    const res = await axios({ method: 'GET', url: 'http://localhost:3900/api/movies' })
+    const res = await axios({
+      method: 'GET',
+      url: `${MDB_BASE_PATH}_${requests.fetchNetflixOrignals}`,
+    })
     return res.data
   } catch (err) {
     if (err.response.data) return thunkAPI.rejectWithValue(err.response.data)
@@ -26,50 +32,58 @@ export const fetchMovies = createAsyncThunk<
   }
 })
 
-export const addMovie = createAsyncThunk<
-  MovieType,
-  {
-    title: string
-    numberInStock: number
-    dailyRentalRate: number
-    genreId: string
-    coverImage: File
-  },
-  { state: { movies: MoviesState } }
->(
-  'movies/addMovieStatus',
-  async ({ title, numberInStock, dailyRentalRate, genreId, coverImage }, thunkAPI) => {
-    const formData = new FormData()
-    formData.append('title', title)
-    formData.append('numberInStock', numberInStock as unknown as string)
-    formData.append('dailyRentalRate', dailyRentalRate as unknown as string)
-    formData.append('genreId', genreId)
-    formData.append('coverImage', coverImage[0])
+// export const addMovie = createAsyncThunk<
+//   MovieType,
+//   {
+//     title: string
+//     numberInStock: number
+//     dailyRentalRate: number
+//     genreId: string
+//     coverImage: File
+//   },
+//   { state: { movies: MoviesState } }
+// >(
+//   'movies/addMovieStatus',
+//   async ({ title, numberInStock, dailyRentalRate, genreId, coverImage }, thunkAPI) => {
+//     const formData = new FormData()
+//     formData.append('title', title)
+//     formData.append('numberInStock', numberInStock as unknown as string)
+//     formData.append('dailyRentalRate', dailyRentalRate as unknown as string)
+//     formData.append('genreId', genreId)
+//     formData.append('coverImage', coverImage[0])
 
-    console.log(formData)
-    try {
-      const res = await axios({
-        method: 'post',
-        url: 'http://localhost:3900/api/movies',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        data: formData,
-      })
-      // console.log(res.data)
-      return res.data
-    } catch (err) {
-      if (err.response.data) return thunkAPI.rejectWithValue(err.response.data)
-      return thunkAPI.rejectWithValue(err.message)
-    }
-  },
-)
+//     console.log(formData)
+//     try {
+//       const res = await axios({
+//         method: 'post',
+//         url: 'http://localhost:3900/api/movies',
+//         headers: { 'Content-Type': 'multipart/form-data' },
+//         data: formData,
+//       })
+//       // console.log(res.data)
+//       return res.data
+//     } catch (err) {
+//       if (err.response.data) return thunkAPI.rejectWithValue(err.response.data)
+//       return thunkAPI.rejectWithValue(err.message)
+//     }
+//   },
+// )
 
 export type MovieType = {
-  _id: string
-  title: string
+  id: number
+  name: string
+  backdrop_path: string
+  first_air_date: string
+  origin_country: string[]
+  original_language: string
+  original_name: string
+  overview: string
+  popularity: string
+  poster_path: string
+  vote_average: number
   numberInStock: number
-  dailyRentalRate: number
-  genre: GenreType
-  coverImg: string
+  vote_count: number
+  genre_ids: number[]
 }
 
 export interface MoviesState {
@@ -92,45 +106,41 @@ export const moviesSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    movieRemoved(state: MoviesState, { payload }: PayloadAction<string>) {
-      state.movies.filter((movie) => movie._id !== payload)
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchMovies.pending, (state, { payload }) => {
-      if (state.status === 'idle') {
-        state.status = 'loading'
-      }
-    })
-
-    // Add reducers for additional action types here, and handle loading state as needed
-    builder
-      .addCase(fetchMovies.fulfilled, (state, { payload }) => {
-        state.movies = payload
-        state.lastFetch = Date.now()
-        state.status = 'succeeded'
-      })
-
-      .addCase(fetchMovies.rejected, (state, { payload }) => {
-        if (state.status === 'loading') {
-          state.status = 'idle'
-        }
-        state.error = payload
-      })
-
-      // Reducer for Add Movie
-      .addCase(addMovie.fulfilled, (state, { payload }) => {
-        state.movies.push(payload)
-        console.log('There is a new movie added to the list')
-      })
-
-      .addCase(addMovie.rejected, (state, { payload }) => {
-        state.error = payload
-      })
+    //   movieRemoved(state: MoviesState, { payload }: PayloadAction<string>) {
+    //     state.movies.filter((movie) => movie._id !== payload)
+    //   },
+    // },
+    // extraReducers: (builder) => {
+    //   builder.addCase(fetchMovies.pending, (state, { payload }) => {
+    //     if (state.status === 'idle') {
+    //       state.status = 'loading'
+    //     }
+    //   })
+    //   // Add reducers for additional action types here, and handle loading state as needed
+    //   builder
+    //     .addCase(fetchMovies.fulfilled, (state, { payload }) => {
+    //       state.movies = payload
+    //       state.lastFetch = Date.now()
+    //       state.status = 'succeeded'
+    //     })
+    //     .addCase(fetchMovies.rejected, (state, { payload }) => {
+    //       if (state.status === 'loading') {
+    //         state.status = 'idle'
+    //       }
+    //       state.error = payload
+    //     })
+    // // Reducer for Add Movie
+    // .addCase(addMovie.fulfilled, (state, { payload }) => {
+    //   state.movies.push(payload)
+    //   console.log('There is a new movie added to the list')
+    // })
+    // .addCase(addMovie.rejected, (state, { payload }) => {
+    //   state.error = payload
+    // })
   },
 })
 
-const { movieRemoved } = moviesSlice.actions
+// const { movieRemoved } = moviesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectMovies = (state: RootState) => state.movies.movies
